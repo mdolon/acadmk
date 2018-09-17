@@ -8,9 +8,11 @@ gem "mysql2"
 # gem "pg"
 
 # rails
-gem 'scenic'
-gem 'scenic-mysql_adapter'
+gem "scenic"
+gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
+gem "haml"
+gem "haml-rails", "~> 1.0"
 
 # js
 gem "dynamic_form"
@@ -38,8 +40,8 @@ gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
 
 group :test, :development do
-  gem 'bullet'
-  gem 'capybara'
+  gem "bullet"
+  gem "capybara"
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"
