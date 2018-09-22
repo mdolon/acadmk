@@ -1,0 +1,16 @@
+%input#comment_folder_/
+= comment.short_id
+"
+class="comment_folder_button" type="checkbox"
+\#{!defined?(force_open)  comment.score = Comment::COLLAPSE_SCORE ? checked :}&gt;
+#c_
+= comment.short_id
+"
+data-shortid="#{comment.short_id if comment.persisted?}"
+class="comment #{comment.current_vote ? (comment.current_vote[:vote] == 1 ? upvoted : downvoted) :}
+\#{comment.score  Comment::SCORE_RANGE_TO_HIDE.first ? bad :}"&gt;
+- if defined?(show_tree_lines)  show_tree_lines
+  %label{:for => "comment_folder_"}
+  = comment.short_id
+  "
+  class="comment_folder"&gt;

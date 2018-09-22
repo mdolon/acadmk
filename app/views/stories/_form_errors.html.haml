@@ -1,0 +1,26 @@
+.form_errors_header
+  - if story.errors.count == 1 && story.already_posted_story
+    .flash-error
+      %h2
+        Error: This story was already submitted #{time_ago_in_words_label(story.already_posted_story.created_at)}
+      %p
+        Please view the
+        %a{:href => "#{story.already_posted_story.comments_path}", :target => "_blank"} previous discussion
+        for this story.
+  - elsif story.errors.any?
+    = error_messages_for story
+  - elsif !story.errors.any? && story.already_posted_story
+    .flash-notice
+      %h2
+        Note: This story was already submitted #{time_ago_in_words_label(story.already_posted_story.created_at)}, but
+        may be submitted again.
+      %p
+        Please view the
+        %a{:href => "#{story.already_posted_story.comments_path}", :target => "_blank"} previous discussion
+        for this story first.  If the content
+        has changed or warrants new discussion, you may submit it again.
+    - if defined?(f)
+      = f.hidden_field :seen_previous
+    - else
+      = form_for story do |f|
+        = f.hidden_field :seen_previous

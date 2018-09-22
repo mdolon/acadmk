@@ -1,0 +1,38 @@
+.box.wide
+  .legend
+    Requested Invitations
+  %p
+    These persons have requested invitations and confirmed their e-mail
+    addresses.  If you recognize anyone, feel free to send them an invitation and
+    remove their request.  If a request looks suspicious, delete it.
+  %table.data.zebra{:cellspacing => "0", :width => "100%"}
+    %tr
+      %th{:width => "15%"} Date/Time
+      %th{:width => "20%"} Name
+      %th{:width => "40%"} Memo
+      %th{:width => "15%"}
+      %th{:width => "10%"}
+    - @invitation_requests.each do |ir|
+      %tr
+        %td= ir.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        %td
+          = ir.name
+          - if @user.is_moderator?
+            %br/
+            %em= ir.email
+        %td= raw ir.markeddown_memo
+        %td
+          = form_tag send_invitation_for_request_path do
+            = hidden_field_tag "code", ir.code
+            = submit_tag "Send Invitation", :data => { :confirm => "Are " <<       |
+              "you sure you want to invite this person and remove this request?" } |
+        %td
+          = form_tag delete_invitation_request_path do
+            = hidden_field_tag "code", ir.code
+            = submit_tag "Delete", :data => { :confirm => "Are you sure " << |
+              "you want to delete this request?" }                           |
+    - if @invitation_requests.count == 0
+      %tr
+        %td{:colspan => "<haml_loud"}
+          @user.is_moderator?? 5 : 4  align="center"&gt;
+          %span.na No invitation requests

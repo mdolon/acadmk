@@ -1,0 +1,44 @@
+.box.wide
+  .legend{:style => "float: right;"}
+    - if @message.author_user_id == @user.id
+      %a{:href => "/messages/sent"} Back to Sent Messages
+    - else
+      %a{:href => "/messages"} Back to Messages
+  .legend
+    = @message.subject
+    .sublegend
+      Sent from
+      - if @message.author
+        %a{:href => "/u/#{@message.author.username}"}= @message.author.username
+      - else
+        = @message.author_username
+      = @message.hat.to_html_label if @message.hat
+      to
+      %a{:href => "/u/#{@message.recipient.username}"}= @message.recipient.username
+      = time_ago_in_words_label(@message.created_at)
+  .boxline.comment_text
+    = raw @message.linkified_body
+  %br/
+  .boxline
+    %div{:style => "float: left;"}
+      = form_tag message_path(@message.short_id), :method => :delete do
+        = submit_tag "Delete Message"
+    %div{:style => "float: left; padding-left: 1em;"}
+      = form_tag message_keep_as_new_path(@message.short_id), :method => :post do
+        = submit_tag "Keep As New"
+    - if @user.is_moderator?
+      %div{:style => "float: left; padding-left: 1em;"}
+        = form_tag message_mod_note_path(@message.short_id), :method => :post do
+          = submit_tag "ModNote"
+  %div{:style => "clear: both;"}
+  %br/
+  - if @new_message
+    .legend
+      Compose Reply
+      - if @new_message
+        To #{@new_message.recipient_username}
+    = render partial: 'form', locals: { new_message: @new_message, replying: true }
+  - else
+    For help with this message, contact
+    = succeed "." do
+      %a{:href => "/u?moderators=1"} a moderator

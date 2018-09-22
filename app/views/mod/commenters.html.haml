@@ -1,0 +1,33 @@
+= render partial: 'nav'
+- if @commenters.present?
+  %table.data.zebra{:style => "margin: 0 auto;"}
+    %tr
+      %th User
+      %th{:title => "Number of standard deviations above average commenter"} +σ
+      %th.r{:title => "Downvotes per comment"} D/C
+      %th.r{:title => "total # of downvotes"} # DV
+      %th.r{:title => "total # of downvoted comments"} # C
+      %th.r{:title => "(percentage of all of users's comments)"} % C
+    - @commenters.each do |id, user|
+      %tr{:id => "#{user[:username]}"}
+        %td
+          = link_to user[:username], user_path(user[:username])
+          %small
+            (#{link_to 'threads', user_threads_path(user[:username])})
+        %td.r= '%.1f' % user[:sigma]
+        %td.r= '%.1f' % user[:average_downvotes]
+        %td.r= user[:n_downvotes]
+        %td.r= user[:n_comments]
+        %td.r
+          = user[:percent_downvoted].round
+          \%
+    %tr
+      %td{:title => "Average of commenters, including the most-downvoted commenters above"}
+        Avg of #{@agg[:n_commenters]} commenters
+      %td.r{:title => "0 by definition; () is standard deviation"}
+        (σ = #{'%.1f' % @agg[:stddev]})
+      %td.r= '%.1f' % @agg[:avg]
+      %td.r= (@agg[:avg] * @agg[:n_comments]).round
+      %td.r= '%.1f' % @agg[:n_comments]
+- else
+  .nominal 🦞

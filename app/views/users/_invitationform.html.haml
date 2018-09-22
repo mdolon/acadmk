@@ -1,0 +1,19 @@
+%p
+  Invitations are unlimited, but persons you invite will be associated with your
+  account in the
+  %a{:href => "/u"} user tree
+  and you may be responsible for them
+  if they cause problems.  Please use your discretion when inviting persons you
+  don't personally know.
+= form_tag invitations_path, :method => :post do |f|
+  - if defined?(return_home) && return_home
+    = hidden_field_tag :return_home, 1
+  .boxline
+    = label_tag :email, "E-mail Address:", :class => "required"
+    = email_field_tag :email, "", :size => 30, :autocomplete => "off"
+  .boxline
+    = label_tag :memo, "Memo to User:", :class => "required"
+    = text_field_tag :memo, "", :size => 60
+  .boxline
+    %p
+    = submit_tag "Send Invitation"

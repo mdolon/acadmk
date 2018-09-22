@@ -1,0 +1,24 @@
+!!! XML
+- coder = HTMLEntities.new
+%rss{:version => "2.0"}
+  %channel
+    %title
+      = Rails.application.name
+      = @title.present? ?     |
+        ": " + h(@title) : "" |
+    %description= @title
+    %link/
+    = Rails.application.root_url
+    comments
+    - @comments.each do |comment|
+      %item
+        %title
+          on #{raw coder.encode(comment.story.title, :decimal)}
+        %link/
+        = comment.url
+        %guid= comment.short_id_url
+        %author= comment.user.username
+        %pubdate= comment.created_at.rfc2822
+        %comments= comment.url
+        %description= raw coder.encode(comment.markeddown_comment, |
+            :decimal)                                    |

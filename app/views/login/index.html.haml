@@ -1,0 +1,41 @@
+.box.wide
+  .legend
+    Login
+  - if Rails.application.read_only?
+    %p
+      The site is currently in read-only mode for maintenance.
+  - else
+    = form_tag login_path do
+      %p
+        = label_tag :email, "E-mail or Username:"
+        = text_field_tag :email, "", :size => 30, :autofocus => "autofocus"
+        %br/
+        = label_tag :password, "Password:"
+        = password_field_tag :password, "", :size => 30
+        %br/
+      %p
+        = submit_tag "Login"
+      %p
+        Forgot your password or deleted your account?
+        \#{link_to "Reset your password", forgot_password_path}.
+      - if Rails.application.open_signups?
+        %p
+          Not a user yet?
+          = succeed "." do
+            %a{:href => "/invitations/open"} Sign up here
+      - else
+        %p
+          Not a user yet?  Signup is by invitation only to combat spam and increase
+          accountability.  If you know
+          %a{:href => "/u/"} a current user
+          of the site,
+          ask them for an invitation or
+          - if Rails.application.allow_invitation_requests?
+            %a{:href => "/invitations/request"}> request one publicly
+            \.
+          - else
+            request one in
+            = succeed "." do
+              %a{:href => "/chat"} chat
+      - if @referer.present?
+        = hidden_field_tag :referer, @referer

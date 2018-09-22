@@ -1,0 +1,52 @@
+:javascript
+  $(document).ready(function() {
+    $("#delete_all").click(function(e) {
+      var table = $(e.target).closest("table");
+      $("td input:checkbox", table).attr("checked", e.target.checked);
+    });
+  });
+.box.wide
+  .legend{:style => "float: right;"}
+    - if @direction == :out
+      %a{:href => "/messages"} View Received
+    - else
+      %a{:href => "/messages/sent"} View Sent
+  .legend
+    Private Messages
+    - if @direction == :out
+      Sent
+  - if @messages.any?
+    = form_tag batch_delete_messages_path do
+      %table.data.zebra{:cellspacing => "0", :width => "100%"}
+        %tr
+          %th{:width => "3%"}= check_box_tag "delete_all", |
+              :id => "delete_all"         |
+          %th{:width => "15%"}= @direction == :in ? "From" : "To"
+          %th{:width => "17%"}= @direction == :in ? "Received" : "Sent"
+          %th{:width => "60%"} Subject
+        - @messages.includes(:author, :recipient).each do |message|
+          %tr{:class => "#{message.has_been_read? ? "" : "bold"}"}
+            %td= check_box_tag "delete_#{message.short_id}"
+            %td
+              %div{:style => "white-space:nowrap;"}
+                - if @direction == :in
+                  - if message.author
+                    %a{:href => "/u/#{message.author.username}"}= message.author.username
+                  - else
+                    = message.author_username
+                  = message.hat.to_html_label if message.hat
+                - else
+                  %a{:href => "/u/#{message.recipient.username}"}= message.recipient.username
+            %td= time_ago_in_words_label(message.created_at)
+            %td
+              %a{:href => "/messages/#{message.short_id}"}= message.subject
+      %p
+        = submit_tag "Delete Selected"
+  - else
+    %p
+      You do not have any #{@direction == :in ? "" : "sent"} private
+      messages.
+  %br/
+  .legend
+    Compose Message
+  = render partial: 'form', locals: { new_message: @new_message, replying: false }

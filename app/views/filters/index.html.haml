@@ -1,0 +1,35 @@
+.box.wide
+  .legend
+    Filtered Tags
+  %p
+    To hide stories from the home page that have been tagged with certain
+    = succeed "," do
+      %a{:href => "/tags"} tags
+  - if !@user
+    %p
+      Since you are not logged in, your filters will be stored in a long-lasting
+      browser cookie.  To permanently store your tag filters and have them work
+      across browsers,
+      %a{:href => "/login"} login
+      to your account.
+  = form_tag "/filters", :method => :post do
+    %table.data.zebra{:cellspacing => "0", :width => "75%"}
+      %tr
+        %th{:width => "7%"} Hide
+        %th{:width => "13%"} Tag
+        %th{:width => "65%"} Description
+        %th{:style => "text-align: right; padding-right: 1em;", :width => "5%"} Stories
+      - @tags.each do |tag|
+        %tr
+          %td= check_box_tag "tags[]", tag.tag, |
+              @filtered_tags.include?(tag)     |
+          %td= link_to tag.tag, tag_path(tag), :class => tag.css_class
+          %td
+            = tag.description
+            - if tag.hotness_mod != 0
+               
+              %em
+                (hotness mod #{tag.hotness_mod > 0 ? "+" : ""}#{tag.hotness_mod})
+          %td{:style => "text-align: right; padding-right: 1em;"}= tag.stories_count
+    %p
+      = submit_tag "Save Filters"

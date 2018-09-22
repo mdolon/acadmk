@@ -1,0 +1,51 @@
+.box.wide
+  .legend
+    Create an Account
+  = form_for @new_user, { :url => signup_path } do |f|
+    %p
+      To create a new account, enter your e-mail address and a password.
+      Your e-mail address will never be shown to users and will only be used
+      if you need to reset your password, or to receive optional new-message
+      alerts.  Your username can be changed later.
+    = error_messages_for(@new_user)
+    - if not Rails.application.open_signups?
+      = hidden_field_tag "invitation_code", @invitation.code
+      %p
+        = f.label :invitation, "Invited By:", :class => "required"
+        %span.d
+          %a{:href => "/u/#{@invitation.user.username}", :target => "_blank"}= @invitation.user.username
+    %p
+      = f.label :username, "Username:", :class => "required"
+      = f.text_field :username, :size => 30
+      %span.hint
+        %tt= User.username_regex_s
+      %br/
+      = f.label :email, "E-mail Address:", :class => "required"
+      = f.email_field :email, :size => 30
+      %span.hint
+        %a{:href => "http://www.gravatar.com/", :target => "_blank"}> Gravatar
+        'ized
+      %br/
+      = f.label :password, "Password:", :class => "required"
+      = f.password_field :password, :size => 30, :autocomplete => "off"
+      %br/
+      = f.label :password_confirmation, "Password (again):", |
+        :class => "required"                                 |
+      = f.password_field :password_confirmation, :size => 30, |
+        :autocomplete => "off"                                |
+      %br/
+    %p
+      Want to tell us about yourself?  It's optional, but it will be visible in
+      your public profile and can be changed at any time.
+    %p
+    .boxline
+      = f.label :about, "About:", :class => "required"
+      = f.text_area :about, :size => "100x5", :style => "width: 600px;"
+    .box
+      .boxline.markdown_help_toggler{:style => "margin-left: 9em; width: 600px;"}
+        .markdown_help_label
+          Markdown formatting available
+        %div{:style => "clear: both;"}
+        = render :partial => "global/markdownhelp"
+    %p
+      = submit_tag "Signup"

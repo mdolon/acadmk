@@ -1,0 +1,113 @@
+%li{class: "story #{story.vote && story.vote[:vote] == 1 ? "upvoted" : ""}"}
+  = story.vote && story.vote[:vote] == -1 ? "downvoted" : ""
+  = story.score <= -1 ? "negative_1" : ""
+  = story.score <= -3 ? "negative_3" : ""
+  = story.score <= -5 ? "negative_5" : ""
+  = story.is_hidden_by_cur_user ? "hidden" : ""
+  = story.is_saved_by_cur_user ? "saved" : ""
+  = story.is_expired? ? "expired" : ""
+  .story_liner
+    .voters
+      - if @user
+        %a.upvoter
+      - else
+        = link_to "", login_path, :class => "upvoter"
+      .score= story.score
+    .details
+      %span.link
+        - if story.can_be_seen_by_user?(@user)
+          %a{:href => "#{story.url_or_comments_path}"}= break_long_words(story.title)
+        - if story.is_gone?
+          [Story removed by #{story.is_moderated? ? "moderator" : "original submitter"}]
+      - if story.markeddown_description.present?
+        %a.description_present{:href => "#{story.comments_path}", :title => "<haml_loud> truncate(story.description,\n        :length => 500) </haml_loud>"} ☶
+      - if story.can_be_seen_by_user?(@user)
+        %span.tags
+          - story.tags.each do |tag|
+            %a{:class => "#{tag.css_class}", :href => "#{tag_path(tag)}", :title => "#{tag.description}"}= tag.tag
+        - if story.domain.present?
+          %a.domain{:href => "#{story.domain_search_url}"}= break_long_words(story.domain)
+        - if defined?(single_story) && single_story
+          - story.merged_stories.not_deleted.each do |ms|
+            %br/
+            %span.merge
+            %span.link
+              %a{:href => "#{ms.url_or_comments_path}"}= break_long_words(ms.title)
+            %span.tags
+              - ms.tags.each do |tag|
+                %a{:class => "#{tag.css_class}", :href => "#{tag_path(tag)}", :title => "#{tag.description}"}= tag.tag
+            - if ms.domain.present?
+              %a.domain{:href => "#{ms.domain_search_url}"}= break_long_words(ms.domain)
+            %span.byline
+              - if (@user && @user.show_avatars?) || !@user
+                %a{:href => "/u/#{ms.user.username}"}= avatar_img(ms.user, 16)
+              - if story.user_is_author?
+                authored by
+              - else
+                via
+              %a{:class => "#{ms.html_class_for_user}", :href => "/u/#{ms.user.username}"}= ms.user.username
+              = time_ago_in_words_label(ms.created_at)
+              - if ms.is_editable_by_user?(@user)
+                |
+                %a{:href => "#{edit_story_path(ms.short_id)}"} edit
+      - if !(defined?(single_story) && single_story) && @user && @user.show_story_previews?
+        - if (sc = story.description_or_story_cache(500)).present?
+          .story_content
+            = break_long_words(sc)
+      .byline
+        - if (@user && @user.show_avatars?) || !@user
+          %a{:href => "/u/#{story.user.username}"}= avatar_img(story.user, 16)
+        - if story.previewing
+          - if story.user_is_author?
+            authored by
+          - else
+            via
+          %a{:class => "#{story.html_class_for_user}"}= story.user.username
+          just now
+        - else
+          - if story.user_is_author?
+            authored by
+          - else
+            via
+          %a{:class => "#{story.html_class_for_user}", :href => "/u/#{story.user.username}"}= story.user.username
+          = time_ago_in_words_label(story.created_at)
+          - if story.is_editable_by_user?(@user)
+            |
+            %a{class: "#{story.has_suggestions? ? "story_has_suggestions" : ""}", :href => "#{edit_story_path(story.short_id)}"} edit
+          - if story.can_have_suggestions_from_user?(@user)
+            | #{link_to "suggest", story_suggest_path(story.short_id), :class => "suggester"}
+          - if !story.is_gone? && @user
+            - if @user && story.vote && story.vote[:vote] == -1
+              |
+              %a.flagger
+                unflag (#{Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase})
+            - elsif @user && @user.can_downvote?(story)
+              |
+              %a.flagger flag
+            - if story.is_hidden_by_cur_user
+              | #{link_to "unhide", story_unhide_path(story.short_id), :class => "hider"}
+            - else
+              | #{link_to "hide", story_hide_path(story.short_id), :class => "hider"}
+            - if defined?(single_story) && single_story && story.hider_count > 0
+              (hidden by #{pluralize(story.hider_count, "user")})
+            - if story.is_saved_by_cur_user
+              | #{link_to "unsave", story_unsave_path(story.short_id), :class => "saver"}
+            - else
+              | #{link_to "save", story_save_path(story.short_id), :class => "saver"}
+          - if story.url.present?
+            |
+            %a{:href => "#{story.archive_url}", :rel => "nofollow", :target => "_blank"} cached
+          - if !story.is_gone?
+            %span.comments_label
+              |
+              %a{:href => "#{story.comments_path}"}
+                - if story.comments_count == 0
+                  no comments
+                - else
+                  = story.comments_count
+                  comment#{story.comments_count == 1 ? "" : "s"}
+          - if defined?(single_story) && single_story && (story.downvotes > 0 && @user && @user.is_moderator?) || (story.downvotes >= 3 || story.score <= 0)
+            |
+            #{story.vote_summary_for(@user).downcase}
+  %a{:class => "mobile_comments #{story.comments_count == 0 ? "zero" : ""}", :href => "#{story.comments_path}", :style => "display: none;"}
+    %span= story.comments_count

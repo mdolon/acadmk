@@ -1,0 +1,9 @@
+= render partial: 'mod/nav'
+= form_tag mod_notes_path, method: :get do |f|
+  .boxline
+    %label.normal{:for => "username"} Username:
+    %input{:name => "username", :type => "text", :value => "#{@username}"}/
+    = submit_tag 'Filter'
+= render partial: 'table', locals: { |
+    mod_notes: @notes                |
+  }                                  |

@@ -1,0 +1,21 @@
+.box.wide
+  .legend.right
+    %a{:href => "/settings"} Back to Settings
+  .legend
+    = @title
+  = form_for @user, :url => twofa_auth_url, :method => :post do |f|
+    %p
+      - if @user.has_2fa?
+        To turn off two-factor authentication for your account, enter your
+        current password:
+      - else
+        To begin the two-factor authentication enrollment for your account,
+        enter your current password:
+    .boxline
+      = f.label :password, "Current Password:", :class => "required"
+      = f.password_field :password, :size => 40, :autocomplete => "off"
+    %p
+      - if @user.has_2fa?
+        = submit_tag "Disable Two-Factor Authentication"
+      - else
+        = submit_tag "Continue"

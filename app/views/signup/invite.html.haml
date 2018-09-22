@@ -1,0 +1,13 @@
+.box.wide
+  .legend
+    Pass Along an Invitation
+  %p
+    This community can only grow when members invite new users, just as
+    %strong= @user.invited_by_user.try(:username)
+    invited you.
+    Take a moment and invite someone you know.
+  = render :partial => "users/invitationform", |
+    :locals => { :return_home => true }        |
+  or
+  %p
+    = button_to "Skip", "/", :method => :get

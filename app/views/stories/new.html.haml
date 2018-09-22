@@ -1,0 +1,26 @@
+#story_box.box
+  .legend
+    Submit a Story
+  #story_holder
+    = form_for @story do |f|
+      = render :partial => "stories/form", :locals => { :story => @story, |
+        :f => f }                                                         |
+      %p
+      .box
+        .boxline.actions.markdown_help_toggler
+          .markdown_help_label
+            Markdown formatting available
+          = submit_tag "Submit"
+           
+          %button.story-preview{:type => "button"} Preview
+          %div{:style => "clear: both;"}
+          = render :partial => "global/markdownhelp", |
+            :locals => { :allow_images => true }      |
+#story_preview
+  - if @story.previewing && @story.valid?
+    = render :template => "stories/show"
+:javascript
+  $(document).ready(function() {
+  <haml_silent>     if !@story.previewing
+  </haml_silent><haml_block>      $("#story_url").focus();
+  </haml_block>  });

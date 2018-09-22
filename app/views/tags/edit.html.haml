@@ -1,0 +1,6 @@
+.box.wide
+  .legend
+    Tag Edit
+  .boxline
+    = link_to "Filter By Tag #{@tag.tag}", tag_path(@tag)
+  = render partial: 'form'

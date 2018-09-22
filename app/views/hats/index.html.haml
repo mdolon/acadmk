@@ -1,0 +1,31 @@
+.box.wide
+  - if @user
+    .legend.right
+      %a{:href => request_hat_url} Request Hat
+  .legend
+    Hats
+  %p
+    A hat is a formal, verified, way of posting a comment while speaking for a
+    project, organization, or company.  Each user may have multiple hats, one of
+    which may be selected to be worn when posting a comment or sending a private
+    message.
+  %table.data.zebra{:cellspacing => "0", :width => "100%"}
+    %tr
+      %th{:style => "width: 130px;"} User
+      %th Hat
+      %th Link
+    - @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg|
+      - @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh|
+        %tr
+          %td
+            %a{:href => "/u/#{hh.user.username}"}= hh.user.username
+          %td= hh.to_html_label
+          %td
+            - if hh.link.to_s.match(/^http/)
+              %a{:href => "#{hh.link}", :rel => "nofollow"}= hh.link
+            - elsif hh.link.blank?
+              %span.na None
+            - else
+              = hh.link
+            - if hh.doffed_at?
+              doffed #{time_ago_in_words_label(hh.doffed_at)}

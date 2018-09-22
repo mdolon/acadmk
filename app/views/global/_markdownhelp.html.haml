@@ -1,0 +1,54 @@
+.markdown_help{:style => "display: none; padding-top: 0.5em;"}
+  %table
+    %tr
+      %td{:width => "125"}
+        %em emphasized text
+      %td
+        surround text with
+        %tt *asterisks*
+    %tr
+      %td
+        %strong strong text
+      %td
+        surround text with
+        %tt **two asterisks**
+    %tr
+      %td
+        %strike struck-through
+      %td
+        surround text with
+        %tt ~~two tilde characters~~
+    %tr
+      %td
+        %tt fixed width
+      %td
+        surround text with
+        %tt `backticks`
+    %tr
+      %td
+        %a{:href => "http://example.com/", :style => "color: inherit;"} linked text
+      %td
+        %tt [linked text](http://example.com/)
+        or just a bare URL
+        to create without a title
+    %tr
+      %td
+        %blockquote quoted text
+      %td
+        prefix text with
+        %tt &gt;
+    %tr
+      %td
+        %pre{:style => "margin: 0px;"}
+          :preserve
+            pre
+              text      %td
+        prefix text with at least
+        %tt     4 spaces
+    - if defined?(allow_images) && allow_images
+      %tr
+        %td (inline image)
+        %td
+          %tt ![alt text](http://example.com/image.jpg)
+          (only allowed in
+          story text
