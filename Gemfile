@@ -13,6 +13,7 @@ gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
 gem "haml"
 gem "haml-rails", "~> 1.0"
+gem "sass-rails"
 
 # js
 gem "dynamic_form"

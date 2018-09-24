@@ -1,26 +1,33 @@
-- if @cur_url == "/recent"
-  #leader.box
-    %em
-      The
-      %a{:href => "/newest"} newest
-      stories that have not yet reached the front page.
-- if @tag
-  #leader.box
-    Stories
-    %a{:href => "/tags"} tagged
-    as
-    %a{:class => "#{@tag.css_class}", :href => "#{tag_path(@tag)}", :title => "#{@tag.description}"}= @tag.tag
-    –
-    \#{@tag.description}
-%ol{:class => "stories list #{@cur_url == "/hidden" ? "show_hidden" : ""}"}
-  = render partial: "stories/listdetail", collection: @stories, as: :story
-.morelink
-  - if @page && @page > 1
-    %a{:href => "#{@cur_url}#{@cur_url == "/" ? "" : "/"}#{@page == 2 ? "" : "page/#{@page - 1}"}"}
-      \&lt;&lt; Page
-      \#{@page - 1}
-  - if @show_more
-    - if @page && @page > 1
-      |
-    %a{:href => "#{@cur_url}#{@cur_url == "/" ? "" : "/"}page/#{@page + 1}"}
-      Page #{@page + 1} &gt;&gt;
+.container.full
+  .columns
+    .column.col-9.col-md-12
+      - if @cur_url == "/recent"
+        #leader.box
+          %em
+            The
+            %a{:href => "/newest"} newest
+            stories that have not yet reached the front page.
+      - if @tag
+        #leader.box
+          Stories
+          %a{:href => "/tags"} tagged
+          as
+          %a{:class => "#{@tag.css_class}", :href => "#{tag_path(@tag)}", :title => "#{@tag.description}"}= @tag.tag
+          –
+          \#{@tag.description}
+      %ol{:class => "stories list #{@cur_url == "/hidden" ? "show_hidden" : ""}"}
+        = render partial: "stories/listdetail", collection: @stories, as: :story
+      .morelink
+        - if @page && @page > 1
+          %a{:href => "#{@cur_url}#{@cur_url == "/" ? "" : "/"}#{@page == 2 ? "" : "page/#{@page - 1}"}"}
+            \&lt;&lt; Page
+            \#{@page - 1}
+        - if @show_more
+          - if @page && @page > 1
+            |
+          %a{:href => "#{@cur_url}#{@cur_url == "/" ? "" : "/"}page/#{@page + 1}"}
+            Page #{@page + 1} &gt;&gt;
+    .column.col-3.col-md-12.hide-sm.info-box
+      .toast.light
+        %h6 Welcome to Acadmk
+        We're a community dedicated to sharing scientific journals from a host of categories.

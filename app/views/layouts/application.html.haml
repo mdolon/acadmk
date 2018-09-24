@@ -33,11 +33,12 @@
     #wrapper
       #header
         #headerleft
-          %a#l_holder{:href => "/", :style => "#{@traffic_style}", :title => "#{Rails.application.name} (Current traffic: #{@traffic.to_i})"}
+          %a#l_holder{:href => "/", :title => "#{Rails.application.name} (Current traffic: #{@traffic.to_i})"}
           - if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present?
             %span#headertitle
               %a{:href => "#{@cur_url}"}= @heading
           %span.headerlinks
+            %a{:class => "logo", :href => "/"}= Rails.application.name
             - header_links.each do |u,v|
               %a{:class => "#{v[:class].join(" ")}", :href => u}= v[:title]
             - if !@user && Rails.application.open_signups?

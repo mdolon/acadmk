@@ -38,7 +38,6 @@ module ApplicationHelper
     return @header_links if @header_links
 
     @header_links = {
-      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
       recent_path => { :title => "Recent" },
       comments_path => { :title => "Comments" },
     }

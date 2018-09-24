@@ -157,6 +157,7 @@
 		position: absolute;
 		width: 5px;
 		z-index: 10;
+		box-sizing: initial;
 	}
 	ol.stories.list li.story .mobile_comments span:after {
 		border-bottom-right-radius: 10px;
@@ -171,6 +172,7 @@
 		position: absolute;
 		width: 10px;
 		z-index: 10;
+		box-sizing: initial;
 	}
 	ol.stories.list li.story .mobile_comments span {
 		background-color: #ccc;
@@ -267,7 +269,7 @@
 	}
 
 	div#footer {
-		text-align: center;
+		margin-left: 28px;
 		float: none;
 	}
 }
